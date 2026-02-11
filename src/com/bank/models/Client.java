@@ -1,33 +1,27 @@
-package com.venteformation.entities;
+package com.bank.models;
 
 /**
  * Entité Client.
  */
 public class Client {
   private int id;
-  private final String lastName;
-  private final String firstName;
+  private String lastName;
+  private String firstName;
 
 
   // Constructeur
   /**
    * Constructeur de Client.
    */
-  public Client(final Integer id, final String lastName, final String firstName, final String mail,
-      final String address, final String phoneNumber, final User user) {
+  public Client(Integer id, String lastName,String firstName) {
     this.id = id;
     this.lastName = lastName;
     this.firstName = firstName;
-    this.mail = mail;
-    this.address = address;
-    this.phoneNumber = phoneNumber;
-    this.user = user;
   }
 
   @Override
   public String toString() {
-    return lastName + " " + firstName + " | Email: " + mail + " | Téléphone: " + phoneNumber
-        + " | Adresse: " + address;
+    return lastName + " " + firstName;
   }
 
   // Getters
@@ -46,6 +40,14 @@ public class Client {
   // Setters
   public void setId(int id) {
     this.id = id;
+  }
+
+  public void setLastName(String lastName){
+    this.lastName = lastName;
+  }
+
+  public void setFirstName(String firstName){
+    this.firstName = firstName;
   }
 
 }
