@@ -4,6 +4,7 @@ public class SqlQuery {
 
   private String selection = "*"; // Par défaut, on prend tout
   private String table;
+  private String jointure = "";
   private String condition = "";
   private String sort = "";
 
@@ -14,6 +15,11 @@ public class SqlQuery {
     public Builder table(String table) {
       query.table = table;
       return this; // Permet de chaîner les appels
+    }
+
+    public Builder join(String jointure) {
+      query.jointure += " INNER JOIN " + jointure;
+      return this;
     }
 
     public Builder filter(String condition) {
@@ -28,7 +34,7 @@ public class SqlQuery {
 
     // La touche finale qui livre la requête
     public String build() {
-      return "SELECT " + query.selection + " FROM " + query.table + query.condition + query.sort + ";";
+      return "SELECT " + query.selection + " FROM " + query.table + query.jointure + query.condition + query.sort + ";";
     }
   }
 
