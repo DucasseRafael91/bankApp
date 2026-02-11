@@ -19,7 +19,6 @@ public class DatabaseConnection {
     this.password = "";
     try {
       this.connection = DriverManager.getConnection(url, user, password);
-      System.out.println("Connection OK !!");
 
     } catch (SQLException e) {
       // TODO Auto-generated catch block

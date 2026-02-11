@@ -22,6 +22,7 @@ public class OperationDao {
       while (rs.next()) {
         operations.add(new Operation(
             rs.getInt("id"),
+            rs.getDouble("montant"),
             account,
             new OperationType(rs.getInt("fk_typeOperation"),rs.getString("type"))
         ));
@@ -31,5 +32,7 @@ public class OperationDao {
     }
     return operations;
   }
+
+
 }
 

@@ -5,6 +5,7 @@ package com.bank.models;
  */
 public class Operation {
   private int id;
+  private double amount;
   private Account account;
   private OperationType operationType;
 
@@ -13,15 +14,16 @@ public class Operation {
   /**
    * Constructeur de Client.
    */
-  public Operation(Integer id, Account account,OperationType operationType) {
+  public Operation(Integer id, double amount, Account account,OperationType operationType) {
     this.id = id;
+    this.amount = amount;
     this.account = account;
     this.operationType = operationType;
   }
 
   @Override
   public String toString() {
-    return account.getBalance() + " " + operationType.getType();
+    return "Operation : " +amount + " euros " + operationType.getType();
   }
 
   // Getters

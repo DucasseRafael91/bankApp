@@ -23,7 +23,7 @@ public class Account {
 
   @Override
   public String toString() {
-    return "Compte " + accountType.getType() + " " + balance +  " euros " + client.getLastName() + " " + client.getFirstName();
+    return "Compte " + accountType.getType() + " contenant " + balance +  " euros ";
   }
 
   // Getters
