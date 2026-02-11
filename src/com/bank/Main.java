@@ -1,36 +1,30 @@
 package com.bank;
 
+import com.bank.daos.ClientDao;
 import com.bank.database.DatabaseConnection;
+import com.bank.database.SqlQuery;
+import com.bank.models.Client;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.util.List;
 
 public class Main {
 
   public static void main(String[] args) {
 
-    try {
-      // Récupération de l'instance
-      DatabaseConnection db = DatabaseConnection.getInstance();
-      Connection conn = db.getConnection();
+      // On prépare la requête (Le Builder)
+      String sql = new SqlQuery.Builder().table("client").build();
 
-      // Vérification simple
-      if (conn != null && !conn.isClosed()) {
-        System.out.println("Connexion établie avec succès !");
+      // On demande au DAO d'aller chercher les données
+      ClientDao dao = new ClientDao();
+      List<Client> withdraw = dao.getClients(sql);
+
+      // On affiche le résultat
+      System.out.println("--- Liste Des Clients ---");
+      for (Client client : withdraw) {
+        System.out.println(client);
       }
-
-      // Test avec une requête
-      Statement stmt = conn.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT 1");
-
-      if (rs.next()) {
-        System.out.println("Test SQL réussi !");
-      }
-
-    } catch (SQLException e) {
-      System.out.println("Erreur de connexion !");
-      e.printStackTrace();
     }
-  }
 }
