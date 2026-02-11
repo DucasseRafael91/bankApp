@@ -1,16 +1,16 @@
 package com.bank.daos;
 import com.bank.models.Account;
-import com.bank.models.AccountType;
+import com.bank.models.Operation;
+import com.bank.models.OperationType;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import com.bank.database.DatabaseConnection;
-import com.bank.models.Client;
 
-public class AccountDao {
+public class OperationDao {
 
-  public List<Account> getAccountsByClient(String sql, Client client) {
-    List<Account> accounts = new ArrayList<>();
+  public List<Operation> getOperationsByAccount(String sql, Account account) {
+    List<Operation> operations = new ArrayList<>();
 
     try {
       // On utilise notre Singleton pour obtenir les infos de connexion
@@ -20,17 +20,16 @@ public class AccountDao {
       ResultSet rs = stmt.executeQuery(sql);
 
       while (rs.next()) {
-        accounts.add(new Account(
+        operations.add(new Operation(
             rs.getInt("id"),
-            rs.getDouble("solde"),
-            new AccountType(rs.getInt("fk_typeCompte"),rs.getString("type"),rs.getDouble("interets")),
-            client
+            account,
+            new OperationType(rs.getInt("fk_typeOperation"),rs.getString("type"))
         ));
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return accounts;
+    return operations;
   }
 }
 
