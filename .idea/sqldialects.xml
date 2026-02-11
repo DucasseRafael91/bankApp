@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/bdd/BDD iNITIALE.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/bdd/Script de création de la base de données.sql" dialect="GenericSQL" />
+  </component>
+</project>

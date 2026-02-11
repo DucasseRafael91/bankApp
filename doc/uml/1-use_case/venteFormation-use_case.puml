@@ -1,0 +1,33 @@
+@startuml venteFormation_use_case
+
+left to right direction
+
+actor Visiteur as v
+actor Utilisateur as u
+actor Admin as a
+
+v <|-right- u
+v <|-right- a
+
+rectangle VenteFormation {
+  usecase "Afficher les formations" as UC1
+  usecase "Afficher les formations par catégorie" as UC2
+  usecase "Afficher les formations contenant un mot clé" as UC3
+  usecase "Afficher les formations selon le type de formation" as UC4
+  usecase "Passer commande" as UC5
+  usecase "Se connecter" as UC6
+  usecase "S'inscrire" as UC7
+  usecase "modifier, supprimer, ajouter des formations" as UC8
+}
+
+v -- UC1
+v -- UC7
+u -- UC5
+a -- UC8
+
+ UC2 .up.> UC1 : extends
+ UC3 .up.> UC1 : extends
+ UC4 .up.> UC1 : extends
+ UC5 .up.> UC6 : include
+
+@enduml
