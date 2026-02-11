@@ -1,13 +1,36 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-void main() {
-  //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-  // to see how IntelliJ IDEA suggests fixing it.
-  IO.println(String.format("Hello and welcome!"));
+package com.bank;
 
-  for (int i = 1; i <= 5; i++) {
-    //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-    // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-    IO.println("i = " + i);
+import com.bank.database.DatabaseConnection;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
+public class Main {
+
+  public static void main(String[] args) {
+
+    try {
+      // Récupération de l'instance
+      DatabaseConnection db = DatabaseConnection.getInstance();
+      Connection conn = db.getConnection();
+
+      // Vérification simple
+      if (conn != null && !conn.isClosed()) {
+        System.out.println("Connexion établie avec succès !");
+      }
+
+      // Test avec une requête
+      Statement stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT 1");
+
+      if (rs.next()) {
+        System.out.println("Test SQL réussi !");
+      }
+
+    } catch (SQLException e) {
+      System.out.println("Erreur de connexion !");
+      e.printStackTrace();
+    }
   }
 }
