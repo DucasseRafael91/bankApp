@@ -33,6 +33,27 @@ public class AccountDao {
     return accounts;
   }
 
+  public boolean updateAccount(Account account) {
+
+    String sql = "UPDATE compte SET solde = ? WHERE id = ?";
+
+    try {
+      Connection conn = DatabaseConnection.getInstance().getConnection();
+
+      PreparedStatement pstmt = conn.prepareStatement(sql);
+      pstmt.setDouble(1, account.getBalance());
+      pstmt.setInt(2, account.getId());
+
+      int rowsUpdated = pstmt.executeUpdate();
+
+      return rowsUpdated > 0;
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
   public List<Account> getAccountById(String sql) {
     List<Account> accounts = new ArrayList<>();
 

@@ -45,8 +45,6 @@ public class OperationDao {
       stmt.setInt(3, operation.getOperationType().getId());
 
       stmt.executeUpdate();
-
-      System.out.println("Opération ajoutée avec succès !");
     } catch (SQLException e) {
       e.printStackTrace();
     }

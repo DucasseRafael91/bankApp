@@ -58,6 +58,8 @@ public class Main {
 
           operationType = "DEPOT";
           createOperation(scanner, selectedAccountDepot, operationType);
+
+
           break;
 
         case 4:
@@ -113,10 +115,19 @@ public class Main {
     if (operationType.equals("RETRAIT") && montant > selectedAccount.getBalance()){
       System.out.println("Solde Insufisant");
     }
-    else {
+    else if (operationType.equals("DEPOT")){
       OperationDao operationDao = new OperationDao();
       operationDao.createOperation(new Operation(0, montant, selectedAccount, new OperationType(1, operationType)));
-      System.out.println(operationType + " effectué !");
+      AccountDao accountDao = new AccountDao();
+      selectedAccount.setBalance(selectedAccount.getBalance() + montant);
+      accountDao.updateAccount(selectedAccount);
+    }
+    else{
+      OperationDao operationDao = new OperationDao();
+      operationDao.createOperation(new Operation(0, montant, selectedAccount, new OperationType(2, operationType)));
+      AccountDao accountDao = new AccountDao();
+      selectedAccount.setBalance(selectedAccount.getBalance() - montant);
+      accountDao.updateAccount(selectedAccount);
     }
 
   }
