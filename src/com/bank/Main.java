@@ -50,25 +50,13 @@ public class Main {
           break;
 
         case 3:
-          getAllClients();
-          clientId = chooseClientId(scanner);
-          client = getClientById(clientId);
-          getAllAccountsByClient(client);
-          accountId = chooseAccountId(scanner);
-          account = getAccountById(accountId);
           operationType = "DEPOT";
-          createOperation(scanner,account, operationType);
+          makeAnOperation(scanner,operationType);
           break;
 
         case 4:
-          getAllClients();
-          clientId = chooseClientId(scanner);
-          client = getClientById(clientId);
-          getAllAccountsByClient(client);
-          accountId = chooseAccountId(scanner);
-          account = getAccountById(accountId);
           operationType = "RETRAIT";
-          createOperation(scanner, account, operationType);
+          makeAnOperation(scanner,operationType);
           break;
 
         case 5:
@@ -103,6 +91,20 @@ public class Main {
     }
 
     scanner.close();
+  }
+
+  private static void makeAnOperation(Scanner scanner, String operationType) {
+    int clientId;
+    Account account;
+    int accountId;
+    Client client;
+    getAllClients();
+    clientId = chooseClientId(scanner);
+    client = getClientById(clientId);
+    getAllAccountsByClient(client);
+    accountId = chooseAccountId(scanner);
+    account = getAccountById(accountId);
+    createOperation(scanner,account, operationType);
   }
 
   private static void createOperation(Scanner scanner, Account selectedAccount, String operationType) {
