@@ -16,10 +16,15 @@ public class Main {
   public static void main(String[] args) {
 
     Scanner scanner = new Scanner(System.in);
-    int choix;
+    int choice = -1;
     String operationType = "";
+    int clientId;
+    Client client;
+    int accountId = 0;
+    Account account;
 
-    do {
+    while (choice != 0) {
+
       System.out.println("\n===== MENU BANQUE =====");
       System.out.println("1 - Afficher tous les clients");
       System.out.println("2 - Afficher les comptes d'un client");
@@ -29,72 +34,64 @@ public class Main {
       System.out.println("0 - Quitter");
       System.out.print("Votre choix : ");
 
-      choix = scanner.nextInt();
+      choice = scanner.nextInt();
 
-      switch (choix) {
+      switch (choice) {
 
         case 1:
           getAllClients();
           break;
 
         case 2:
-          // Afficher les comptes d'un client
           getAllClients();
-          int clientId2 = chooseClientId(scanner);
-          Client client2 = getClientById(clientId2);
-          getAllAccountsByClient(client2);
+          clientId = chooseClientId(scanner);
+          client = getClientById(clientId);
+          getAllAccountsByClient(client);
           break;
 
         case 3:
-          // Dépôt
           getAllClients();
-
-          int clientIdDepot = chooseClientId(scanner);
-          Client clientDepot = getClientById(clientIdDepot);
-          getAllAccountsByClient(clientDepot);
-
-          int accountIdDepot = chooseAccountId(scanner);
-          Account selectedAccountDepot = getAccountById(accountIdDepot);
-
+          clientId = chooseClientId(scanner);
+          client = getClientById(clientId);
+          getAllAccountsByClient(client);
+          accountId = chooseAccountId(scanner);
+          account = getAccountById(accountId);
           operationType = "DEPOT";
-          createOperation(scanner, selectedAccountDepot, operationType);
-
-
+          createOperation(scanner,account, operationType);
           break;
 
         case 4:
           getAllClients();
-          int clientIdRetrait = chooseClientId(scanner);
-          Client clientRetrait = getClientById(clientIdRetrait);
-          getAllAccountsByClient(clientRetrait);
-          int accountIdRetrait = chooseAccountId(scanner);
-          Account selectedAccountRetrait = getAccountById(accountIdRetrait);
+          clientId = chooseClientId(scanner);
+          client = getClientById(clientId);
+          getAllAccountsByClient(client);
+          accountId = chooseAccountId(scanner);
+          account = getAccountById(accountId);
           operationType = "RETRAIT";
-          createOperation(scanner, selectedAccountRetrait, operationType);
+          createOperation(scanner, account, operationType);
           break;
 
         case 5:
           getAllClients();
-          int clientId4 = chooseClientId(scanner);
-          Client client4 = getClientById(clientId4);
+          clientId = chooseClientId(scanner);
+          client = getClientById(clientId);
 
-          if (client4 == null) {
+          if (client == null) {
             System.out.println("Client introuvable !");
             break;
           }
 
-          getAllAccountsByClient(client4);
-          int accountId4 = chooseAccountId(scanner);
-          Account selectedAccount4 = getAccountById(accountId4);
-          if (selectedAccount4 == null) {
+          getAllAccountsByClient(client);
+          accountId = chooseAccountId(scanner);
+          account = getAccountById(accountId);
+
+          if (account == null) {
             System.out.println("Compte introuvable !");
             break;
           }
 
-          getAllOperationsByAccount(selectedAccount4);
-
+          getAllOperationsByAccount(account);
           break;
-
 
         case 0:
           System.out.println("Au revoir !");
@@ -103,8 +100,7 @@ public class Main {
         default:
           System.out.println("Choix invalide.");
       }
-
-    } while (choix != 0);
+    }
 
     scanner.close();
   }
