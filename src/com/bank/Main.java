@@ -192,7 +192,7 @@ public class Main {
     if (account == null) {
       return null;
     }
-    
+
     System.out.println("--- Compte Sélectionné ---");
     System.out.println(account);
 
