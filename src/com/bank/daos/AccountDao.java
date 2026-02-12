@@ -32,5 +32,29 @@ public class AccountDao {
     }
     return accounts;
   }
+
+  public List<Account> getAccountById(String sql) {
+    List<Account> accounts = new ArrayList<>();
+
+    try {
+      // On utilise notre Singleton pour obtenir les infos de connexion
+      Connection conn = DatabaseConnection.getInstance().getConnection();
+
+      Statement stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery(sql);
+
+      while (rs.next()) {
+        accounts.add(new Account(
+            rs.getInt("id"),
+            rs.getDouble("solde"),
+            new AccountType(rs.getInt("fk_typeCompte"),rs.getString("type"),rs.getDouble("interets")),
+            new Client(0,"TEST","Test")
+        ));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return accounts;
+  }
 }
 

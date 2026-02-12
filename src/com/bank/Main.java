@@ -67,24 +67,15 @@ public class Main {
           List<Account> accountsDepot = getAllAccountsByClient(clientDepot);
           System.out.print("Entrez l'ID du compte : ");
           int accountIdDepot = scanner.nextInt();
-          Account selectedAccountDepot = null;
-          for (Account a : accountsDepot) {
-            if (a.getId() == accountIdDepot) {
-              selectedAccountDepot = a;
-              break;
-            }
-          }
-
+          Account selectedAccountDepot = getAccountById(accountIdDepot);
           System.out.print("Entrez le montant du dépôt : ");
           double montantDepot = scanner.nextDouble();
-
           OperationDao operationDaoDepot = new OperationDao();
           operationDaoDepot.createOperation(new Operation(0, montantDepot, selectedAccountDepot, new OperationType(1, "DEPOT")));
           System.out.println("Dépôt effectué !");
           break;
 
         case 4:
-          // Retrait
           List<Client> clientsRetrait = getAllClients();
           System.out.print("Entrez l'ID du client : ");
           int clientIdRetrait = scanner.nextInt();
@@ -96,27 +87,18 @@ public class Main {
             }
           }
 
-          List<Account> accountsRetrait = getAllAccountsByClient(clientRetrait);
+          getAllAccountsByClient(clientRetrait);
           System.out.print("Entrez l'ID du compte : ");
           int accountIdRetrait = scanner.nextInt();
-          Account selectedAccountRetrait = null;
-          for (Account a : accountsRetrait) {
-            if (a.getId() == accountIdRetrait) {
-              selectedAccountRetrait = a;
-              break;
-            }
-          }
-
+          Account selectedAccountRetrait = getAccountById(accountIdRetrait);
           System.out.print("Entrez le montant du retrait : ");
           double montantRetrait = scanner.nextDouble();
-
           OperationDao operationDaoRetrait = new OperationDao();
           operationDaoRetrait.createOperation(new Operation(0, montantRetrait, selectedAccountRetrait, new OperationType(2, "RETRAIT")));
           System.out.println("Retrait effectué !");
           break;
 
         case 5:
-          // Afficher les opérations d'un compte
           List<Client> clients4 = getAllClients();
           System.out.print("Entrez l'ID du client : ");
           int clientId4 = scanner.nextInt();
@@ -127,18 +109,25 @@ public class Main {
               break;
             }
           }
-          List<Account> accounts4 = getAllAccountsByClient(client4);
+
+          if (client4 == null) {
+            System.out.println("Client introuvable !");
+            break;
+          }
+
+          getAllAccountsByClient(client4);
           System.out.print("Entrez l'ID du compte : ");
           int accountId4 = scanner.nextInt();
-          Account selectedAccount4 = null;
-          for (Account a : accounts4) {
-            if (a.getId() == accountId4) {
-              selectedAccount4 = a;
-              break;
-            }
+          Account selectedAccount4 = getAccountById(accountId4);
+          if (selectedAccount4 == null) {
+            System.out.println("Compte introuvable !");
+            break;
           }
+
           getAllOperationsByAccount(selectedAccount4);
+
           break;
+
 
         case 0:
           System.out.println("Au revoir !");
@@ -188,6 +177,29 @@ public class Main {
       System.out.println(account);
     }
     return accounts;
+  }
+
+  private static Account getAccountById(int id) {
+
+    String sql = new SqlQuery.Builder().table("compte")
+        .join("client ON compte.fk_client = client.id")
+        .join("typecompte ON compte.fk_typeCompte = typecompte.id")
+        .filter("compte.id = " + id)
+        .build();
+
+    AccountDao dao = new AccountDao();
+    List<Account> accounts = dao.getAccountById(sql);
+
+    if (accounts.isEmpty()) {
+      return null;
+    }
+
+    Account account = accounts.get(0);
+
+    System.out.println("--- Compte Sélectionné ---");
+    System.out.println(account);
+
+    return account;
   }
 
   private static void getAllOperationsByAccount(Account account) {
