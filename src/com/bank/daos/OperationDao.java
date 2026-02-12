@@ -33,6 +33,25 @@ public class OperationDao {
     return operations;
   }
 
+  public void createOperation(Operation operation) {
+    String sql = "INSERT INTO operation (montant, fk_compte, fk_typeOperation) VALUES (?, ?, ?)";
+
+    try {
+      Connection conn = DatabaseConnection.getInstance().getConnection();
+      PreparedStatement stmt = conn.prepareStatement(sql);
+
+      stmt.setDouble(1, operation.getAmount());
+      stmt.setInt(2, operation.getAccount().getId());
+      stmt.setInt(3, operation.getOperationType().getId());
+
+      stmt.executeUpdate();
+
+      System.out.println("Opération ajoutée avec succès !");
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
 
 }
 

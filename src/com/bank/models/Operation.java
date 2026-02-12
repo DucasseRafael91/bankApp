@@ -31,6 +31,10 @@ public class Operation {
     return id;
   }
 
+  public double getAmount(){
+    return amount;
+  }
+
   public Account getAccount() {
     return account;
   }

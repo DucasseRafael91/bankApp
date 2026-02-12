@@ -7,6 +7,7 @@ import com.bank.database.SqlQuery;
 import com.bank.models.Account;
 import com.bank.models.Client;
 import com.bank.models.Operation;
+import com.bank.models.OperationType;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,7 +22,9 @@ public class Main {
       System.out.println("\n===== MENU BANQUE =====");
       System.out.println("1 - Afficher tous les clients");
       System.out.println("2 - Afficher les comptes d'un client");
-      System.out.println("3 - Afficher les opérations d'un compte");
+      System.out.println("3 - Effectuer un dépôt");
+      System.out.println("4 - Effectuer un retrait");
+      System.out.println("5 - Afficher les opérations d'un compte");
       System.out.println("0 - Quitter");
       System.out.print("Votre choix : ");
 
@@ -34,41 +37,107 @@ public class Main {
           break;
 
         case 2:
-          getAllClients();
+          // Afficher les comptes d'un client
+          List<Client> clients2 = getAllClients();
           System.out.print("Entrez l'ID du client : ");
-          int clientId = scanner.nextInt();
-          Client client = getAllClients().get(clientId - 1);
-          getAllAccountsByClient(client);
+          int clientId2 = scanner.nextInt();
+          Client client2 = null;
+          for (Client c : clients2) {
+            if (c.getId() == clientId2) {
+              client2 = c;
+              break;
+            }
+          }
+          getAllAccountsByClient(client2);
           break;
 
         case 3:
-          List<Client> clients = getAllClients();
-
+          // Dépôt
+          List<Client> clientsDepot = getAllClients();
           System.out.print("Entrez l'ID du client : ");
-          int clientIdChoice = scanner.nextInt();
-
-          Client selectedClient = null;
-          for (Client c : clients) {
-            if (c.getId() == clientIdChoice) {
-              selectedClient = c;
+          int clientIdDepot = scanner.nextInt();
+          Client clientDepot = null;
+          for (Client c : clientsDepot) {
+            if (c.getId() == clientIdDepot) {
+              clientDepot = c;
               break;
             }
           }
 
-          List<Account> accounts = getAllAccountsByClient(selectedClient);
-
+          List<Account> accountsDepot = getAllAccountsByClient(clientDepot);
           System.out.print("Entrez l'ID du compte : ");
-          int accountIdChoice = scanner.nextInt();
-
-          Account selectedAccount = null;
-          for (Account a : accounts) {
-            if (a.getId() == accountIdChoice) {
-              selectedAccount = a;
+          int accountIdDepot = scanner.nextInt();
+          Account selectedAccountDepot = null;
+          for (Account a : accountsDepot) {
+            if (a.getId() == accountIdDepot) {
+              selectedAccountDepot = a;
               break;
             }
           }
 
-          getAllOperationsByAccount(selectedAccount);
+          System.out.print("Entrez le montant du dépôt : ");
+          double montantDepot = scanner.nextDouble();
+
+          OperationDao operationDaoDepot = new OperationDao();
+          operationDaoDepot.createOperation(new Operation(0, montantDepot, selectedAccountDepot, new OperationType(1, "DEPOT")));
+          System.out.println("Dépôt effectué !");
+          break;
+
+        case 4:
+          // Retrait
+          List<Client> clientsRetrait = getAllClients();
+          System.out.print("Entrez l'ID du client : ");
+          int clientIdRetrait = scanner.nextInt();
+          Client clientRetrait = null;
+          for (Client c : clientsRetrait) {
+            if (c.getId() == clientIdRetrait) {
+              clientRetrait = c;
+              break;
+            }
+          }
+
+          List<Account> accountsRetrait = getAllAccountsByClient(clientRetrait);
+          System.out.print("Entrez l'ID du compte : ");
+          int accountIdRetrait = scanner.nextInt();
+          Account selectedAccountRetrait = null;
+          for (Account a : accountsRetrait) {
+            if (a.getId() == accountIdRetrait) {
+              selectedAccountRetrait = a;
+              break;
+            }
+          }
+
+          System.out.print("Entrez le montant du retrait : ");
+          double montantRetrait = scanner.nextDouble();
+
+          OperationDao operationDaoRetrait = new OperationDao();
+          operationDaoRetrait.createOperation(new Operation(0, montantRetrait, selectedAccountRetrait, new OperationType(2, "RETRAIT")));
+          System.out.println("Retrait effectué !");
+          break;
+
+        case 5:
+          // Afficher les opérations d'un compte
+          List<Client> clients4 = getAllClients();
+          System.out.print("Entrez l'ID du client : ");
+          int clientId4 = scanner.nextInt();
+          Client client4 = null;
+          for (Client c : clients4) {
+            if (c.getId() == clientId4) {
+              client4 = c;
+              break;
+            }
+          }
+          List<Account> accounts4 = getAllAccountsByClient(client4);
+          System.out.print("Entrez l'ID du compte : ");
+          int accountId4 = scanner.nextInt();
+          Account selectedAccount4 = null;
+          for (Account a : accounts4) {
+            if (a.getId() == accountId4) {
+              selectedAccount4 = a;
+              break;
+            }
+          }
+          getAllOperationsByAccount(selectedAccount4);
           break;
 
         case 0:
@@ -83,7 +152,6 @@ public class Main {
 
     scanner.close();
   }
-
 
   private static List<Client> getAllClients() {
     // On prépare la requête (Le Builder)
