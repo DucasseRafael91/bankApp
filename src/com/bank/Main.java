@@ -89,7 +89,6 @@ public class Main {
           System.out.println("Choix invalide.");
       }
     }
-
     scanner.close();
   }
 
@@ -188,14 +187,12 @@ public class Main {
         .build();
 
     AccountDao dao = new AccountDao();
-    List<Account> accounts = dao.getAccountById(sql);
+    Account account = dao.getAccountById(sql);
 
-    if (accounts.isEmpty()) {
+    if (account == null) {
       return null;
     }
-
-    Account account = accounts.get(0);
-
+    
     System.out.println("--- Compte Sélectionné ---");
     System.out.println(account);
 
