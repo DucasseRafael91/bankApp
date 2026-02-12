@@ -17,6 +17,7 @@ public class Main {
 
     Scanner scanner = new Scanner(System.in);
     int choix;
+    String operationType = "";
 
     do {
       System.out.println("\n===== MENU BANQUE =====");
@@ -38,77 +39,42 @@ public class Main {
 
         case 2:
           // Afficher les comptes d'un client
-          List<Client> clients2 = getAllClients();
-          System.out.print("Entrez l'ID du client : ");
-          int clientId2 = scanner.nextInt();
-          Client client2 = null;
-          for (Client c : clients2) {
-            if (c.getId() == clientId2) {
-              client2 = c;
-              break;
-            }
-          }
+          getAllClients();
+          int clientId2 = chooseClientId(scanner);
+          Client client2 = getClientById(clientId2);
           getAllAccountsByClient(client2);
           break;
 
         case 3:
           // Dépôt
-          List<Client> clientsDepot = getAllClients();
-          System.out.print("Entrez l'ID du client : ");
-          int clientIdDepot = scanner.nextInt();
-          Client clientDepot = null;
-          for (Client c : clientsDepot) {
-            if (c.getId() == clientIdDepot) {
-              clientDepot = c;
-              break;
-            }
-          }
+          getAllClients();
 
-          List<Account> accountsDepot = getAllAccountsByClient(clientDepot);
-          System.out.print("Entrez l'ID du compte : ");
-          int accountIdDepot = scanner.nextInt();
+          int clientIdDepot = chooseClientId(scanner);
+          Client clientDepot = getClientById(clientIdDepot);
+          getAllAccountsByClient(clientDepot);
+
+          int accountIdDepot = chooseAccountId(scanner);
           Account selectedAccountDepot = getAccountById(accountIdDepot);
-          System.out.print("Entrez le montant du dépôt : ");
-          double montantDepot = scanner.nextDouble();
-          OperationDao operationDaoDepot = new OperationDao();
-          operationDaoDepot.createOperation(new Operation(0, montantDepot, selectedAccountDepot, new OperationType(1, "DEPOT")));
-          System.out.println("Dépôt effectué !");
+
+          operationType = "DEPOT";
+          createOperation(scanner, selectedAccountDepot, operationType);
           break;
 
         case 4:
-          List<Client> clientsRetrait = getAllClients();
-          System.out.print("Entrez l'ID du client : ");
-          int clientIdRetrait = scanner.nextInt();
-          Client clientRetrait = null;
-          for (Client c : clientsRetrait) {
-            if (c.getId() == clientIdRetrait) {
-              clientRetrait = c;
-              break;
-            }
-          }
-
+          getAllClients();
+          int clientIdRetrait = chooseClientId(scanner);
+          Client clientRetrait = getClientById(clientIdRetrait);
           getAllAccountsByClient(clientRetrait);
-          System.out.print("Entrez l'ID du compte : ");
-          int accountIdRetrait = scanner.nextInt();
+          int accountIdRetrait = chooseAccountId(scanner);
           Account selectedAccountRetrait = getAccountById(accountIdRetrait);
-          System.out.print("Entrez le montant du retrait : ");
-          double montantRetrait = scanner.nextDouble();
-          OperationDao operationDaoRetrait = new OperationDao();
-          operationDaoRetrait.createOperation(new Operation(0, montantRetrait, selectedAccountRetrait, new OperationType(2, "RETRAIT")));
-          System.out.println("Retrait effectué !");
+          operationType = "RETRAIT";
+          createOperation(scanner, selectedAccountRetrait, operationType);
           break;
 
         case 5:
-          List<Client> clients4 = getAllClients();
-          System.out.print("Entrez l'ID du client : ");
-          int clientId4 = scanner.nextInt();
-          Client client4 = null;
-          for (Client c : clients4) {
-            if (c.getId() == clientId4) {
-              client4 = c;
-              break;
-            }
-          }
+          getAllClients();
+          int clientId4 = chooseClientId(scanner);
+          Client client4 = getClientById(clientId4);
 
           if (client4 == null) {
             System.out.println("Client introuvable !");
@@ -116,8 +82,7 @@ public class Main {
           }
 
           getAllAccountsByClient(client4);
-          System.out.print("Entrez l'ID du compte : ");
-          int accountId4 = scanner.nextInt();
+          int accountId4 = chooseAccountId(scanner);
           Account selectedAccount4 = getAccountById(accountId4);
           if (selectedAccount4 == null) {
             System.out.println("Compte introuvable !");
@@ -140,6 +105,32 @@ public class Main {
     } while (choix != 0);
 
     scanner.close();
+  }
+
+  private static void createOperation(Scanner scanner, Account selectedAccount, String operationType) {
+    System.out.print("Entrez le montant du " + operationType + " : ");
+    double montant = scanner.nextDouble();
+    if (operationType.equals("RETRAIT") && montant > selectedAccount.getBalance()){
+      System.out.println("Solde Insufisant");
+    }
+    else {
+      OperationDao operationDao = new OperationDao();
+      operationDao.createOperation(new Operation(0, montant, selectedAccount, new OperationType(1, operationType)));
+      System.out.println(operationType + " effectué !");
+    }
+
+  }
+
+  private static int chooseAccountId(Scanner scanner) {
+    System.out.print("Entrez l'ID du compte : ");
+    int accountId = scanner.nextInt();
+    return accountId;
+  }
+
+  private static int chooseClientId(Scanner scanner) {
+    System.out.print("Entrez l'ID du client : ");
+    int clientId = scanner.nextInt();
+    return clientId;
   }
 
   private static List<Client> getAllClients() {
@@ -202,6 +193,19 @@ public class Main {
     return account;
   }
 
+  private static Client getClientById(int id) {
+
+    String sql = new SqlQuery.Builder().table("client")
+        .filter("client.id = " + id)
+        .build();
+
+    ClientDao dao = new ClientDao();
+    Client client = dao.getClientById(sql);
+    System.out.println("--- Compte Sélectionné ---");
+    System.out.println(client);
+    return client;
+  }
+
   private static void getAllOperationsByAccount(Account account) {
     // On prépare la requête (Le Builder)
 
@@ -210,7 +214,6 @@ public class Main {
         .filter("fk_compte = " + account.getId())
         .build();
 
-    // On demande au DAO d'aller chercher les données
     OperationDao dao = new OperationDao();
     List<Operation> operations = dao.getOperationsByAccount(sql, account);
 

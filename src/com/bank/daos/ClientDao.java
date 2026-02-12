@@ -1,4 +1,6 @@
 package com.bank.daos;
+import com.bank.models.Account;
+import com.bank.models.AccountType;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,29 @@ public class ClientDao {
       e.printStackTrace();
     }
     return clients;
+  }
+
+  public Client getClientById(String sql) {
+
+    Client client = null;
+    try {
+      // On utilise notre Singleton pour obtenir les infos de connexion
+      Connection conn = DatabaseConnection.getInstance().getConnection();
+
+      Statement stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery(sql);
+
+      while (rs.next()) {
+        client = new Client(
+            rs.getInt("id"),
+            rs.getString("nom"),
+            rs.getString("prenom")
+        );
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return client;
   }
 }
 
