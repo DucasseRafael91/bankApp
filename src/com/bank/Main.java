@@ -111,7 +111,6 @@ public class Main {
     double montant = scanner.nextDouble();
     if (operationType.equals("RETRAIT") && montant > selectedAccount.getBalance()){
       System.out.println("Solde Insuffisant");
-      System.out.println("Solde Insuffisant");
     }
     else if (operationType.equals("DEPOT")){
       OperationDao operationDao = new OperationDao();
