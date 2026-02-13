@@ -55,7 +55,7 @@ public class AccountDao {
   }
 
   public Account getAccountById(String sql) {
-    Account account;
+    Account account = null;
     try {
       // On utilise notre Singleton pour obtenir les infos de connexion
       Connection conn = DatabaseConnection.getInstance().getConnection();
